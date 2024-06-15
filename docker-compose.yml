@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:20
+    volumes: 
+      - "./:/app"
+    working_dir: /app
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
+    networks:
+      - renaper_service_default
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    depends_on:
+      - redis
+    container_name: code_ts_container
+  
+  redis:
+    image: redis:latest
+    networks:
+      - renaper_service_default
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    container_name: redis_container
+
+volumes:
+  redis-data:
+
+networks:
+  renaper_service_default:
+    driver: bridge
